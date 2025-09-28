@@ -1,0 +1,240 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 14px;
+  --background: #fdfcfc;
+  --foreground: #4a4a4a;
+  --card: #ffffff;
+  --card-foreground: #4a4a4a;
+  --popover: #ffffff;
+  --popover-foreground: #4a4a4a;
+  --primary: #b794d6;
+  --primary-foreground: #ffffff;
+  --secondary: #f7e6ff;
+  --secondary-foreground: #4a4a4a;
+  --muted: #faf8ff;
+  --muted-foreground: #9ca3af;
+  --accent: #e8d5ff;
+  --accent-foreground: #4a4a4a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(183, 148, 214, 0.2);
+  --input: transparent;
+  --input-background: #fdfcfc;
+  --switch-background: #e8d5ff;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #b794d6;
+  --chart-1: #b794d6;
+  --chart-2: #f093fb;
+  --chart-3: #4fd1c7;
+  --chart-4: #ffd89b;
+  --chart-5: #ff9a9e;
+  --radius: 1rem;
+  --sidebar: #fdfcfc;
+  --sidebar-foreground: #4a4a4a;
+  --sidebar-primary: #b794d6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f7e6ff;
+  --sidebar-accent-foreground: #4a4a4a;
+  --sidebar-border: rgba(183, 148, 214, 0.2);
+  --sidebar-ring: #b794d6;
+  
+  /* Custom Dior's Muse Colors */
+  --lavender: #b794d6;
+  --blush-pink: #ff9a9e;
+  --cream: #fef7f0;
+  --muted-gold: #ffd89b;
+  --pastel-teal: #4fd1c7;
+  --soft-gray: #f8f9fa;
+  --accent-purple: #9f7aea;
+  --dior-black: #1a1a1a;
+  --dior-silver: #c0c0c0;
+  --dior-champagne: #f7e7ce;
+}
+
+.dark {
+  --background: #1a1a2e;
+  --foreground: #eee;
+  --card: #16213e;
+  --card-foreground: #eee;
+  --popover: #16213e;
+  --popover-foreground: #eee;
+  --primary: #b794d6;
+  --primary-foreground: #ffffff;
+  --secondary: #2d3748;
+  --secondary-foreground: #eee;
+  --muted: #2d3748;
+  --muted-foreground: #a0aec0;
+  --accent: #2d3748;
+  --accent-foreground: #eee;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(183, 148, 214, 0.3);
+  --input: #2d3748;
+  --ring: #b794d6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Custom Dior's Muse Colors */
+  --color-lavender: var(--lavender);
+  --color-blush-pink: var(--blush-pink);
+  --color-cream: var(--cream);
+  --color-muted-gold: var(--muted-gold);
+  --color-pastel-teal: var(--pastel-teal);
+  --color-soft-gray: var(--soft-gray);
+  --color-accent-purple: var(--accent-purple);
+  --color-dior-black: var(--dior-black);
+  --color-dior-silver: var(--dior-silver);
+  --color-dior-champagne: var(--dior-champagne);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    h4 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    button {
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    input {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Custom gradients for luxury feminine design */
+.gradient-lavender {
+  background: linear-gradient(135deg, #b794d6 0%, #9f7aea 100%);
+}
+
+.gradient-blush {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.gradient-teal {
+  background: linear-gradient(135deg, #4fd1c7 0%, #81e6d9 100%);
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #ffd89b 0%, #f6ad55 100%);
+}
+
+.gradient-dior {
+  background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+}
+
+.gradient-champagne {
+  background: linear-gradient(135deg, #f7e7ce 0%, #e6d3a3 100%);
+}
+
+/* Smooth animations */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom shadows */
+.shadow-soft {
+  box-shadow: 0 4px 25px -5px rgba(183, 148, 214, 0.25);
+}
+
+.shadow-card {
+  box-shadow: 0 2px 15px -3px rgba(183, 148, 214, 0.15);
+}
