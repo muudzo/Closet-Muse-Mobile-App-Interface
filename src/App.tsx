@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AppProvider } from './contexts/AppContext';
 import { Toaster } from './components/ui/sonner';
 import BottomNavigation from './components/BottomNavigation';
@@ -10,6 +10,17 @@ import ProfilePage from './components/ProfilePage';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('home');
+
+  // Handle first-time user navigation
+  useEffect(() => {
+    const handleSwitchToWardrobe = () => {
+      setActiveTab('wardrobe');
+    };
+
+    window.addEventListener('switchToWardrobe', handleSwitchToWardrobe);
+    return () =>
+      window.removeEventListener('switchToWardrobe', handleSwitchToWardrobe);
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -38,13 +49,18 @@ function AppContent() {
               <span className="text-white text-sm font-serif">D</span>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl text-gray-800 tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>
+              <h1
+                className="text-xl text-gray-800 tracking-wide"
+                style={{ fontFamily: 'Georgia, serif' }}
+              >
                 Dior's Muse
               </h1>
-              <span className="text-xs text-gray-500 italic tracking-widest">FASHION AI</span>
+              <span className="text-xs text-gray-500 italic tracking-widest">
+                FASHION AI
+              </span>
             </div>
           </div>
-          
+
           {/* Weather widget placeholder - will show real weather data */}
           <div className="flex items-center space-x-2 bg-purple-50 px-3 py-1 rounded-full">
             <span className="text-sm">☀️</span>
@@ -54,15 +70,13 @@ function AppContent() {
       </div>
 
       {/* Main Content */}
-      <main className="relative z-10">
-        {renderContent()}
-      </main>
+      <main className="relative z-10">{renderContent()}</main>
 
       {/* Bottom Navigation */}
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-      
+
       {/* Toast Notifications */}
-      <Toaster 
+      <Toaster
         position="top-center"
         toastOptions={{
           style: {

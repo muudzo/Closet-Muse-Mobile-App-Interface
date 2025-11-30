@@ -44,7 +44,12 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/no-unescaped-entities': 'warn',
     'jsx-a11y/click-events-have-key-events': 'warn',
     'jsx-a11y/no-static-element-interactions': 'warn',
+    'jsx-a11y/img-redundant-alt': 'warn',
+    'jsx-a11y/heading-has-content': 'warn',
+    'jsx-a11y/anchor-has-content': 'warn',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

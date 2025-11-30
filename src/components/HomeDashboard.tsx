@@ -3,15 +3,30 @@ import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import { Cloud, Sun, CloudRain, Heart, Share2, Sparkles, Thermometer, RefreshCw, Zap } from 'lucide-react';
+import {
+  Cloud,
+  Sun,
+  CloudRain,
+  Heart,
+  Share2,
+  Sparkles,
+  Thermometer,
+  RefreshCw,
+  Zap,
+} from 'lucide-react';
 import { useApp, getWeatherIcon } from '../contexts/AppContext';
 import { weatherService } from '../services/weatherService';
-import { outfitRecommendationService, OutfitRecommendation } from '../services/outfitRecommendationService';
+import {
+  outfitRecommendationService,
+  OutfitRecommendation,
+} from '../services/outfitRecommendationService';
 import { toast } from 'sonner';
 
 export default function HomeDashboard() {
   const { state, dispatch } = useApp();
-  const [todaysOutfit, setTodaysOutfit] = useState<OutfitRecommendation | null>(null);
+  const [todaysOutfit, setTodaysOutfit] = useState<OutfitRecommendation | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -23,15 +38,23 @@ export default function HomeDashboard() {
 
   const loadTodaysOutfit = async () => {
     setLoading(true);
-    
+
     try {
-      const recommendation = await outfitRecommendationService.generateDailyRecommendation(
-        state.wardrobe,
-        state.currentWeather,
-        'casual', // Default to casual for daily recommendation
-        state.user.preferences
-      );
-      
+      // Check if user has any items in their wardrobe
+      if (state.wardrobe.length === 0) {
+        setTodaysOutfit(null);
+        setLoading(false);
+        return;
+      }
+
+      const recommendation =
+        await outfitRecommendationService.generateDailyRecommendation(
+          state.wardrobe,
+          state.currentWeather,
+          'casual', // Default to casual for daily recommendation
+          state.user.preferences
+        );
+
       setTodaysOutfit(recommendation);
     } catch (error) {
       console.error('Failed to generate outfit recommendation:', error);
@@ -68,7 +91,7 @@ export default function HomeDashboard() {
       items: todaysOutfit.items,
       planned: true,
       confidence: todaysOutfit.confidence,
-      notes: todaysOutfit.reasoning.join('. ')
+      notes: todaysOutfit.reasoning.join('. '),
     };
 
     dispatch({ type: 'ADD_OUTFIT', payload: newOutfit });
@@ -77,15 +100,15 @@ export default function HomeDashboard() {
 
   const shareOutfit = () => {
     if (!todaysOutfit) return;
-    
+
     const items = Object.values(todaysOutfit.items).filter(Boolean);
-    const outfitText = `Check out my ${todaysOutfit.style} look: ${items.map(item => item!.name).join(', ')}`;
-    
+    const outfitText = `Check out my ${todaysOutfit.style} look: ${items.map((item) => item!.name).join(', ')}`;
+
     if (navigator.share) {
       navigator.share({
         title: 'My Closet Muse Outfit',
         text: outfitText,
-        url: window.location.href
+        url: window.location.href,
       });
     } else {
       navigator.clipboard.writeText(outfitText);
@@ -100,7 +123,7 @@ export default function HomeDashboard() {
       dresses: '👗',
       shoes: '👠',
       accessories: '💎',
-      perfumes: '🌸'
+      perfumes: '🌸',
     };
     return emojiMap[item.category as keyof typeof emojiMap] || '👕';
   };
@@ -109,8 +132,16 @@ export default function HomeDashboard() {
     <div className="px-4 pt-6 pb-24 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-2xl text-gray-800 mb-2">Good morning Andile ✨</h1>
-        <p className="text-gray-600">Let's make today stylish</p>
+        <h1 className="text-2xl text-gray-800 mb-2">
+          {state.user.name
+            ? `Good morning ${state.user.name} ✨`
+            : 'Welcome to Closet Muse ✨'}
+        </h1>
+        <p className="text-gray-600">
+          {state.wardrobe.length > 0
+            ? "Let's make today stylish"
+            : 'Your personal fashion assistant'}
+        </p>
       </div>
 
       {/* Weather Card */}
@@ -118,11 +149,17 @@ export default function HomeDashboard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="p-3 bg-white rounded-full shadow-sm">
-              <span className="text-xl">{getWeatherIcon(state.currentWeather.condition)}</span>
+              <span className="text-xl">
+                {getWeatherIcon(state.currentWeather.condition)}
+              </span>
             </div>
             <div>
-              <p className="text-lg text-gray-800">{state.currentWeather.temp}°F</p>
-              <p className="text-sm text-gray-600 capitalize">{state.currentWeather.condition}</p>
+              <p className="text-lg text-gray-800">
+                {state.currentWeather.temp}°F
+              </p>
+              <p className="text-sm text-gray-600 capitalize">
+                {state.currentWeather.condition}
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-1 text-purple-600">
@@ -152,7 +189,10 @@ export default function HomeDashboard() {
               disabled={refreshing}
               className="border-purple-200 text-purple-600 hover:bg-purple-50"
             >
-              <RefreshCw size={14} className={`${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                size={14}
+                className={`${refreshing ? 'animate-spin' : ''}`}
+              />
             </Button>
           </div>
         </div>
@@ -173,53 +213,68 @@ export default function HomeDashboard() {
             <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-6 text-center">
               <div className="w-32 h-32 mx-auto bg-white rounded-full shadow-soft flex items-center justify-center mb-4">
                 <div className="grid grid-cols-3 gap-1 text-xl">
-                  {Object.values(todaysOutfit.items).slice(0, 6).map((item, index) => (
-                    item && (
-                      <span key={index} className="text-lg">
-                        {getItemEmoji(item)}
-                      </span>
-                    )
-                  ))}
+                  {Object.values(todaysOutfit.items)
+                    .slice(0, 6)
+                    .map(
+                      (item, index) =>
+                        item && (
+                          <span key={index} className="text-lg">
+                            {getItemEmoji(item)}
+                          </span>
+                        )
+                    )}
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-2">{todaysOutfit.occasion}</p>
-              <h3 className="text-lg text-gray-800 mb-4">{todaysOutfit.style}</h3>
-              
+              <p className="text-sm text-gray-600 mb-2">
+                {todaysOutfit.occasion}
+              </p>
+              <h3 className="text-lg text-gray-800 mb-4">
+                {todaysOutfit.style}
+              </h3>
+
               {/* Outfit Items */}
               <div className="grid grid-cols-2 gap-3 mb-4">
-                {Object.entries(todaysOutfit.items).map(([type, item]) => (
-                  item && (
-                    <div key={type} className="bg-white rounded-lg p-3 shadow-sm">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">{type}</p>
-                      <p className="text-sm text-gray-800">{item.name}</p>
-                      <p className="text-xs text-purple-600">{item.color}</p>
-                      {item.favorite && <span className="text-xs">❤️</span>}
-                    </div>
-                  )
-                ))}
+                {Object.entries(todaysOutfit.items).map(
+                  ([type, item]) =>
+                    item && (
+                      <div
+                        key={type}
+                        className="bg-white rounded-lg p-3 shadow-sm"
+                      >
+                        <p className="text-xs text-gray-500 uppercase tracking-wide">
+                          {type}
+                        </p>
+                        <p className="text-sm text-gray-800">{item.name}</p>
+                        <p className="text-xs text-purple-600">{item.color}</p>
+                        {item.favorite && <span className="text-xs">❤️</span>}
+                      </div>
+                    )
+                )}
               </div>
-              
+
               {/* AI Reasoning */}
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="flex items-center justify-center space-x-2 mb-2">
                   <Zap className="text-purple-500" size={16} />
                   <p className="text-sm text-gray-800">AI Insights</p>
                 </div>
-                <p className="text-xs text-gray-600">{todaysOutfit.reasoning[0]}</p>
+                <p className="text-xs text-gray-600">
+                  {todaysOutfit.reasoning[0]}
+                </p>
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="flex space-x-3">
-              <Button 
+              <Button
                 className="flex-1 bg-purple-500 hover:bg-purple-600 text-white"
                 onClick={saveOutfit}
               >
                 <Heart size={16} className="mr-2" />
                 Save Outfit
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="flex-1 border-purple-200 text-purple-600 hover:bg-purple-50"
                 onClick={shareOutfit}
               >
@@ -228,10 +283,37 @@ export default function HomeDashboard() {
               </Button>
             </div>
           </div>
+        ) : state.wardrobe.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center mb-4">
+              <Sparkles className="text-purple-500" size={32} />
+            </div>
+            <h3 className="text-lg text-gray-800 mb-2">
+              Welcome to Closet Muse! 👋
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Start building your digital wardrobe to get personalized outfit
+              recommendations
+            </p>
+            <Button
+              className="bg-purple-500 hover:bg-purple-600 text-white"
+              onClick={() => {
+                // This will be handled by the parent component to switch to wardrobe tab
+                window.dispatchEvent(new CustomEvent('switchToWardrobe'));
+              }}
+            >
+              Add Your First Item
+            </Button>
+          </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-600 mb-4">Unable to generate recommendation</p>
-            <Button onClick={loadTodaysOutfit} className="bg-purple-500 hover:bg-purple-600 text-white">
+            <p className="text-gray-600 mb-4">
+              Unable to generate recommendation
+            </p>
+            <Button
+              onClick={loadTodaysOutfit}
+              className="bg-purple-500 hover:bg-purple-600 text-white"
+            >
               Try Again
             </Button>
           </div>
@@ -247,7 +329,7 @@ export default function HomeDashboard() {
           <h3 className="text-sm text-gray-800 mb-1">Style Quiz</h3>
           <p className="text-xs text-gray-600">Discover your vibe</p>
         </Card>
-        
+
         <Card className="p-4 text-center hover:shadow-lg smooth-transition cursor-pointer">
           <div className="w-12 h-12 mx-auto bg-gradient-to-br from-teal-400 to-blue-500 rounded-full flex items-center justify-center mb-3">
             <CloudRain className="text-white" size={20} />
@@ -262,17 +344,21 @@ export default function HomeDashboard() {
         <h3 className="text-lg text-gray-800 mb-4">Wardrobe Stats</h3>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-2xl text-purple-600 mb-1">{state.wardrobe.length}</p>
+            <p className="text-2xl text-purple-600 mb-1">
+              {state.wardrobe.length}
+            </p>
             <p className="text-xs text-gray-600">Total Items</p>
           </div>
           <div>
             <p className="text-2xl text-pink-600 mb-1">
-              {state.wardrobe.filter(item => item.favorite).length}
+              {state.wardrobe.filter((item) => item.favorite).length}
             </p>
             <p className="text-xs text-gray-600">Favorites</p>
           </div>
           <div>
-            <p className="text-2xl text-teal-600 mb-1">{state.outfits.length}</p>
+            <p className="text-2xl text-teal-600 mb-1">
+              {state.outfits.length}
+            </p>
             <p className="text-xs text-gray-600">Saved Outfits</p>
           </div>
         </div>
