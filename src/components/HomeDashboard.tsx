@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { ImageWithFallback } from './figma/ImageWithFallback';
 import {
-  Cloud,
-  Sun,
   CloudRain,
   Heart,
   Share2,
@@ -21,6 +18,7 @@ import {
   OutfitRecommendation,
 } from '../services/outfitRecommendationService';
 import { toast } from 'sonner';
+import { FashionTrends } from './FashionTrends';
 
 export default function HomeDashboard() {
   const { state, dispatch } = useApp();
@@ -338,6 +336,9 @@ export default function HomeDashboard() {
           <p className="text-xs text-gray-600">Perfect for today</p>
         </Card>
       </div>
+
+      {/* Fashion Trends */}
+      <FashionTrends />
 
       {/* Recent Activity */}
       <Card className="p-4">

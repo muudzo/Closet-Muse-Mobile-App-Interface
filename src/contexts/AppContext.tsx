@@ -45,6 +45,7 @@ export interface WeatherData {
   condition: 'sunny' | 'cloudy' | 'rainy' | 'snowy' | 'windy';
   humidity: number;
   description: string;
+  location?: string;
 }
 
 interface AppState {
