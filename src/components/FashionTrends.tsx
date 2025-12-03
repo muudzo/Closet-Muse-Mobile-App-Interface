@@ -3,6 +3,13 @@ import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { api } from '../services/api';
 import { TrendingUp } from 'lucide-react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './ui/carousel';
 
 interface TrendItem {
   id: string;
@@ -20,7 +27,9 @@ export function FashionTrends() {
     const fetchTrends = async () => {
       try {
         const data = await api.getFashionTrends();
-        setTrends(data);
+        // Shuffle trends for "always shuffles new inspo pictures" effect
+        const shuffled = [...data].sort(() => Math.random() - 0.5);
+        setTrends(shuffled);
       } catch (error) {
         console.error('Failed to fetch trends:', error);
       } finally {
@@ -39,7 +48,7 @@ export function FashionTrends() {
           <h2 className="text-lg text-gray-800">Trending Now</h2>
         </div>
         <div className="animate-pulse space-y-4">
-          <div className="h-48 bg-gray-200 rounded-lg"></div>
+          <div className="h-64 bg-gray-200 rounded-lg"></div>
           <div className="h-4 bg-gray-200 rounded w-3/4"></div>
         </div>
       </Card>
@@ -60,34 +69,47 @@ export function FashionTrends() {
         </Badge>
       </div>
 
-      <div className="flex overflow-x-auto space-x-4 pb-4 -mx-4 px-4 scrollbar-hide">
-        {trends.map((trend) => (
-          <div key={trend.id} className="flex-none w-64 group cursor-pointer">
-            <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-3">
-              <img
-                src={trend.image_url}
-                alt={trend.title}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                <p className="text-white text-sm line-clamp-2">
-                  {trend.description}
-                </p>
+      <Carousel className="w-full">
+        <CarouselContent>
+          {trends.map((trend) => (
+            <CarouselItem key={trend.id} className="basis-full">
+              <div className="p-1">
+                <div className="relative aspect-[3/4] rounded-lg overflow-hidden mb-3">
+                  <img
+                    src={trend.image_url}
+                    alt={trend.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
+                    <div>
+                      <h3 className="text-white font-medium text-lg mb-1">
+                        {trend.title}
+                      </h3>
+                      <p className="text-white/90 text-sm line-clamp-2 mb-2">
+                        {trend.description}
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {trend.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="text-xs text-white/80 bg-white/20 px-2 py-0.5 rounded-full backdrop-blur-sm"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <h3 className="text-gray-800 font-medium truncate">
-              {trend.title}
-            </h3>
-            <div className="flex flex-wrap gap-1 mt-1">
-              {trend.tags.slice(0, 2).map((tag) => (
-                <span key={tag} className="text-xs text-gray-500">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="hidden sm:block">
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </div>
+      </Carousel>
     </Card>
   );
 }
