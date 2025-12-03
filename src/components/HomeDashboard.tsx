@@ -320,7 +320,10 @@ export default function HomeDashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-4">
-        <Card className="p-4 text-center hover:shadow-lg smooth-transition cursor-pointer">
+        <Card
+          className="p-4 text-center hover:shadow-lg smooth-transition cursor-pointer"
+          onClick={() => toast.info('Style Quiz feature coming soon!')}
+        >
           <div className="w-12 h-12 mx-auto bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center mb-3">
             <Sparkles className="text-white" size={20} />
           </div>
@@ -328,7 +331,10 @@ export default function HomeDashboard() {
           <p className="text-xs text-gray-600">Discover your vibe</p>
         </Card>
 
-        <Card className="p-4 text-center hover:shadow-lg smooth-transition cursor-pointer">
+        <Card
+          className="p-4 text-center hover:shadow-lg smooth-transition cursor-pointer"
+          onClick={() => toast.info('Weather Style feature coming soon!')}
+        >
           <div className="w-12 h-12 mx-auto bg-gradient-to-br from-teal-400 to-blue-500 rounded-full flex items-center justify-center mb-3">
             <CloudRain className="text-white" size={20} />
           </div>
